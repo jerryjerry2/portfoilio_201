@@ -1,5 +1,6 @@
 const auth = require('../models/auth');
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 
 const register = async (body) => {
     if(!body.email || !body.password){
@@ -22,6 +23,37 @@ const register = async (body) => {
     return row;
 };
 
+const login = async (body) => {
+    if(!body.email || !body.password){
+        throw new Error('Email and Password is required');
+    }
+
+    let checkEmail = await auth.findByEmail(body.email);
+    //console.log(checkEmail);
+    
+    if(checkEmail.length == 0){
+        throw new Error('Email and Password is invalid');
+    }
+    
+    let checkPassword = await bcrypt.compare(body.password, checkEmail[0].password_hash);
+    if(checkPassword == false){
+        throw new Error('Email and Password is invalid');
+    }
+
+    const token = jwt.sign(
+        {id : checkEmail[0].id},
+        'mysecret',
+        {expiresIn : '1D'}
+    );
+
+    return {
+        id : checkEmail[0].id,
+        email : checkEmail[0].email,
+        token
+    }
+}
+
 module.exports = {
-    register
+    register,
+    login
 }
