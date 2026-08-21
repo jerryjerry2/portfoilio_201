@@ -15,7 +15,6 @@ const register = async (body) => {
     const hashPassword = await bcrypt.hash(body.password, 10);
     
     body.password = hashPassword;
-    console.log(body);
     
     const result = await auth.register(body);
     const row = await auth.findById(result);
