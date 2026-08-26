@@ -36,7 +36,27 @@ const login = async (req, res) => {
     }
 }
 
+const logout = async (req, res) => {
+    try {
+        const result = await auth.logout(req.user.id);
+        console.log('Controller : ', req.user);
+        
+        return res.json({
+            result : true,
+            msg : 'Logout Successfully',
+            data : result
+        })
+    } catch (error) {
+        console.log(error);
+        return res.json({
+            result : false,
+            msg : error.message
+        })
+    }
+}
+
 module.exports = {
     register,
-    login
+    login,
+    logout
 }

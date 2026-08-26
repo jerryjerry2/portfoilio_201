@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken');
+const auth = require('../models/auth');
 
-const isLogin = (req, res, next) => {
+const isLogin = async (req, res, next) => {
     try {
         const authHeader = req.headers.authorization;
 
@@ -21,8 +22,17 @@ const isLogin = (req, res, next) => {
         }
 
         const token = parts[1];
+        const checkToken = await auth.findByToken(token);
+
+        if(checkToken.length == 0){
+            return res.json({
+                result : false,
+                msg : 'Invalid or Expired token'
+            })
+        }
+
         const decode = jwt.verify(token, 'mysecret');
-        console.log(decode);
+        req.user = decode;
 
         next();
     } catch (error) {
@@ -33,9 +43,6 @@ const isLogin = (req, res, next) => {
         })
         
     }
-
-
-
 }
 
 module.exports = {

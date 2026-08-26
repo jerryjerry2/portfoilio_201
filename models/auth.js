@@ -13,16 +13,28 @@ const findById = async (id) => {
 }
 
 const register = async (body) => {
-    let sql = 'insert into users (email, password_hash) values (?, ?)';
-    let arrData = [body.email, body.password];
+    let sql = 'insert into users (email, password_hash, verification_token, verification_expires) values (?, ?, ?, ?)';
+    let arrData = [body.email, body.password, body.verification_token, body.verification_expires];
 
     const result = await pool.query(sql, arrData);
 
     return result[0].insertId;
 }
 
+const updateToken = async (id, token) => {
+    await pool.query('update users set token = ? where id = ?', [token, id]);
+}
+
+const findByToken = async (token) => {
+    const [result] = await pool.query('select * from users where token = ?', [token]);
+
+    return result;
+}
+
 module.exports ={ 
     findByEmail,
     findById,
     register,
+    updateToken,
+    findByToken
 }
