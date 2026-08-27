@@ -31,10 +31,17 @@ const findByToken = async (token) => {
     return result;
 }
 
+const findVerificationToken = async (token) => {
+    const [result] = await pool.query('select * from users where verification_token = ?', [token]);
+
+    return result;
+}
+
 module.exports ={ 
     findByEmail,
     findById,
     register,
     updateToken,
-    findByToken
+    findByToken,
+    findVerificationToken
 }

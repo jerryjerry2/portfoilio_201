@@ -48,6 +48,10 @@ const login = async (body) => {
         throw new Error('Email and Password is invalid');
     }
 
+    if(checkEmail[0].is_verified == 0){
+        throw new Error('Email not yet verified');
+    }
+    
     const token = jwt.sign(
         {id : checkEmail[0].id},
         'mysecret',
@@ -67,8 +71,24 @@ const logout = async (id) => {
     await auth.updateToken(id, null);
 }
 
+const verifyEmail = async (token) => {
+    //console.log('Service : ', token);
+    if(!token){
+        throw new Error('Token is required');
+    }
+
+    let checkToken = await auth.findVerificationToken(token);
+    console.log(checkToken);
+    if(checkToken.length == 0){
+        throw new Error('Token is invalid');
+    }
+    
+    
+}
+
 module.exports = {
     register,
     login,
-    logout
+    logout,
+    verifyEmail
 }

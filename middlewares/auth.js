@@ -13,7 +13,6 @@ const isLogin = async (req, res, next) => {
         }
 
         let parts = authHeader.split(' ');
-        console.log(parts);
         if (parts.length !== 2 || parts[0] !== 'Bearer') {
             return res.json({
                 result: false,

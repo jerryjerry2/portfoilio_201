@@ -55,8 +55,22 @@ const logout = async (req, res) => {
     }
 }
 
+const verifyEmail = async (req, res) =>{
+    try {
+        const result = await auth.verifyEmail(req.query.token);
+        
+    } catch (error) {
+        console.log(error);
+        return res.json({
+            result : false,
+            msg : error.message
+        })
+    }
+}
+
 module.exports = {
     register,
     login,
-    logout
+    logout,
+    verifyEmail
 }
