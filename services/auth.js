@@ -16,7 +16,7 @@ const register = async (body) => {
     
     const hashPassword = await bcrypt.hash(body.password, 10);
     const verification_token = crypto.randomBytes(32).toString('hex');
-    const verification_expires = new Date(Date.now() + 60 * 60 * 1000); //1h
+    const verification_expires = new Date(Date.now() + 60 * 3000); // 1 minute
 
     body.password = hashPassword;
     body.verification_token = verification_token;
@@ -82,7 +82,16 @@ const verifyEmail = async (token) => {
     if(checkToken.length == 0){
         throw new Error('Token is invalid');
     }
+
+    if(checkToken[0].is_verified){
+        throw new Error('Email Already Verified');
+    }
     
+    if(!checkToken[0].verification_expires || new Date(checkToken[0].verification_expires) < new Date()){
+        throw new Error('Link is expired');
+    }
+
+    await auth.verifyEmail(checkToken[0].id);
     
 }
 

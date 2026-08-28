@@ -37,11 +37,16 @@ const findVerificationToken = async (token) => {
     return result;
 }
 
+const verifyEmail = async (id) => {
+    await pool.query('update users set is_verified = 1 where id = ? ', [id]);
+}
+
 module.exports ={ 
     findByEmail,
     findById,
     register,
     updateToken,
     findByToken,
-    findVerificationToken
+    findVerificationToken,
+    verifyEmail
 }

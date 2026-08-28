@@ -58,6 +58,11 @@ const logout = async (req, res) => {
 const verifyEmail = async (req, res) =>{
     try {
         const result = await auth.verifyEmail(req.query.token);
+
+        res.json({
+            result : true,
+            msg : 'Email Verify Successfully'
+        })
         
     } catch (error) {
         console.log(error);
