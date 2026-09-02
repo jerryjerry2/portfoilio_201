@@ -41,6 +41,12 @@ const verifyEmail = async (id) => {
     await pool.query('update users set is_verified = 1 where id = ? ', [id]);
 }
 
+const updateVerificationToken = async (body) => {
+    const arrData = [body.verification_token, body.verification_expires, body.id];
+    const sql = 'update users set verification_token = ?, verification_expires = ? where id = ?'
+    await pool.query(sql, arrData);
+}
+
 module.exports ={ 
     findByEmail,
     findById,
@@ -48,5 +54,6 @@ module.exports ={
     updateToken,
     findByToken,
     findVerificationToken,
-    verifyEmail
+    verifyEmail,
+    updateVerificationToken
 }

@@ -73,9 +73,28 @@ const verifyEmail = async (req, res) =>{
     }
 }
 
+const resendEmail = async (req, res) => {
+    try {
+        const result = await auth.resendEmail(req.body);
+
+        res.json({
+            result : true,
+            msg : 'Resend Link Successfully'
+        })
+        
+    } catch (error) {
+        console.log(error);
+        return res.json({
+            result : false,
+            msg : error.message
+        });
+    }
+}
+
 module.exports = {
     register,
     login,
     logout,
-    verifyEmail
+    verifyEmail,
+    resendEmail
 }

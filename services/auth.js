@@ -95,9 +95,38 @@ const verifyEmail = async (token) => {
     
 }
 
+const resendEmail = async (body) => {
+    if(!body.email){
+        throw new Error('Email is required');
+    }
+
+    const checkEmail = await auth.findByEmail(body.email);
+    if(checkEmail.length == 0){
+        throw new Error('Invalid Email');
+    }
+
+    if(checkEmail[0].is_verified){
+        throw new Error('Email already verified');
+    }
+
+    const verification_token = crypto.randomBytes(32).toString('hex');
+    const verification_expires = new Date(Date.now() + 60 * 3000); // 1 minute
+
+    const data = {
+        id : checkEmail[0].id,
+        verification_token,
+        verification_expires
+    }
+
+    await auth.updateVerificationToken(data);  //update to db
+    await mailService.sendVerificationEmail(body.email, verification_token); //sent to user
+    
+}
+
 module.exports = {
     register,
     login,
     logout,
-    verifyEmail
+    verifyEmail,
+    resendEmail
 }
