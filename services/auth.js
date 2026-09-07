@@ -5,9 +5,6 @@ const crypto = require('crypto');
 const mailService = require('../services/mailService');
 
 const register = async (body) => {
-    if(!body.email || !body.password){
-        throw new Error('Email and Password is required');
-    }
 
     let checkEmail = await auth.findByEmail(body.email);
     if(checkEmail.length > 0){
@@ -32,10 +29,6 @@ const register = async (body) => {
 };
 
 const login = async (body) => {
-    if(!body.email || !body.password){
-        throw new Error('Email and Password is required');
-    }
-
     let checkEmail = await auth.findByEmail(body.email);
     //console.log(checkEmail);
     
