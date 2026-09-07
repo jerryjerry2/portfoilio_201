@@ -13,8 +13,8 @@ const findById = async (id) => {
 }
 
 const register = async (body) => {
-    let sql = 'insert into users (email, password_hash, verification_token, verification_expires) values (?, ?, ?, ?)';
-    let arrData = [body.email, body.password, body.verification_token, body.verification_expires];
+    let sql = 'insert into users (full_name, phone, email, password_hash, verification_token, verification_expires) values (?, ?, ?, ?, ?, ?)';
+    let arrData = [body.full_name, body.phone, body.email, body.password, body.verification_token, body.verification_expires];
 
     const result = await pool.query(sql, arrData);
 
